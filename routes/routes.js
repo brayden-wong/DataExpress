@@ -11,32 +11,26 @@ const collection = db.collection('information');
 
 
 const encrypt = async str => {
+
     const salt = await bcrypt.genSalt(10);
     str = await bcrypt.hash(str, salt);
     return str;
 }
 
 exports.index = (req, res) => {
+
     res.render('index');
 }
 
 exports.login = (req, res) => {
+
     res.render('login');
 }
 
 exports.register = (req, res) => {
+
     res.render('register');
 }
-
-exports.checkAuth = async(req,res) => {
-    await client.connect();
-    const UserUname = req.body.username;
-    const UserPassword = req.body.password;
-    const findPassword = await collection.findOne({"Username": UserUname})
-    console.log(findPassword);
-    client.close();
-    
-};
 
 exports.postRegister = async (req, res) => {
 
@@ -81,5 +75,29 @@ exports.postRegister = async (req, res) => {
     }
     else {
         //send them to an error page
+    }
+}
+
+const decrypt = async (password, hash) => {
+
+    return await bcrypt.compare(password, hash);
+    
+}
+
+exports.checkAuth = async (req, res) => {
+
+    const username = req.body.username;
+    const password = req.body.password;
+    
+    await client.connect();
+
+    const user = await collection.findOne({ "username" : username });
+    
+    if(decrypt(password, user.password)) {
+        console.log('login successful');
+        res.redirect('/register');
+    }
+    else {
+        res.redirect('/login')
     }
 }

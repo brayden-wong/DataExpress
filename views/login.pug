@@ -2,13 +2,13 @@ doctype
 html 
     head 
     h1=title
-    link(href="/style.css")
+    link(rel='stylesheet' href="style.css")
     body 
         block content 
-            form(method="post" action="http://localhost:3000/checkAuth" name="login")
+            form(method="post" action='http://localhost:3000/login' name="login")
                 p Username :
                     input(type="text" name="username")
                 p Password :
-                    input(type="text" name="password")
+                    input(type="password" name="password")
                 p
                     input(type="submit" value="Log in")
