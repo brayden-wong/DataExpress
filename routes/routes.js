@@ -1,7 +1,6 @@
 const bcrypt = require("bcryptjs");
 const { response } = require("express");
-const {MongoClient} = require('mongodb');
-const cookieParser = require("cookie-parser");
+const {MongoClient} = require('mongodb')
 
 const url = 'mongodb+srv://user_1:Passw0rd1@cluster0.lolsc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 //const url = 'mongodb+srv://user_1:Passw0rd1@cluster0.lolsc.mongodb.net/test'
@@ -12,32 +11,26 @@ const collection = db.collection('information');
 
 
 const encrypt = async str => {
+
     const salt = await bcrypt.genSalt(10);
     str = await bcrypt.hash(str, salt);
     return str;
 }
 
 exports.index = (req, res) => {
+
     res.render('index');
 }
 
 exports.login = (req, res) => {
+
     res.render('login');
 }
 
 exports.register = (req, res) => {
+
     res.render('register');
 }
-
-exports.checkAuth = async(req,res) => {
-    await client.connect();
-    const UserUname = req.body.username;
-    const UserPassword = req.body.password;
-    const findPassword = await collection.findOne({"Username": UserUname})
-    console.log(findPassword);
-    client.close();
-    
-};
 
 exports.postRegister = async (req, res) => {
 
