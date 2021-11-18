@@ -17,23 +17,10 @@ const urlencodedParser = express.urlencoded({
     extended: false
 });
 
-app.get("/", routes.index, (req,res)=>{
-    visited++
-    res.cookie("startSession",visited,{maxAge: 9999});
+app.get("/login", routes.login);
+app.post("/login", routes.checkAuth);
 
-    if(req.cookies.hasStarted == "yes")
-    {
-        res.send("has Session");
-    }else{
-        res.cookie("hasStarted","yes",{maxAge: 9999});
-        res.send("Started session")
-        visited = 0;
-    }
-});
-app.get("/login",routes.login);
-app.post("/login",routes.checkAuth);
+app.get("/register", routes.register);
+app.post("/postRegister", urlencodedParser,routes.postRegister);
 
-app.get("/register",routes.register);
-app.post("/postRegister",urlencodedParser,routes.postRegister);
-
-app.listen(3000)
+app.listen(3000);

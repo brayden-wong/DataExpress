@@ -1,5 +1,4 @@
 const bcrypt = require("bcryptjs");
-const { response } = require("express");
 const {MongoClient} = require('mongodb');
 const cookieParser = require("cookie-parser");
 
