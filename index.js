@@ -13,6 +13,10 @@ app.use(express.static(path.join(__dirname,'/public')));
 const urlencodedParser = express.urlencoded({
     extended: false
 });
+
+const startSession = (req,res) =>{
+    
+};
 app.get('/', routes.index);
 
 app.get("/login", routes.login);

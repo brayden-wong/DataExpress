@@ -1,13 +1,16 @@
 const bcrypt = require("bcryptjs");
 const {MongoClient} = require('mongodb');
 const cookieParser = require("cookie-parser");
-
 const url = 'mongodb+srv://user_1:Passw0rd1@cluster0.lolsc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
-//const url = 'mongodb+srv://user_1:Passw0rd1@cluster0.lolsc.mongodb.net/test'
+const express = require("express");
+const session = require("express-session");
+const app = express();
 
 const client = new MongoClient(url);
 const db = client.db('users');
 const collection = db.collection('information');
+app.use(cookieParser());
+app.use(session({StartSession:"Session started"}));
 
 
 const encrypt = async str => {
@@ -66,8 +69,7 @@ exports.postRegister = async (req, res) => {
                     "question2" : question2,
                     "question3" : question3,
                     "question4" : question4
-                }
-                
+                }    
                 await collection.insertOne(userInfo);
                 res.redirect('/')
             }
@@ -95,9 +97,12 @@ exports.checkAuth = async (req, res) => {
     
     if(decrypt(password, user.password)) {
         console.log('login successful');
-        res.redirect('/register');
+        if(req.StartSession.user){
+            res.redirect('/edit');
+        }
     }
     else {
+        req.StartSession.destroy;
         res.redirect('/login')
     }
 }
