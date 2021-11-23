@@ -39,9 +39,9 @@ const encrypt = async str => {
     return str;
 }
 
-const decrypt = async (password, hash) => {
+const decrypt = (password, hash) => {
 
-    return await bcrypt.compare(password, hash);
+    return bcrypt.compareSync(password, hash);
 }
 
 const checkAuth =  (req, res, next) => {
