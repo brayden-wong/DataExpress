@@ -1,6 +1,6 @@
 const expressSession = require("express-session");
 const pug = require("pug");
-const {MongoClient} = require('mongodb');
+const {MongoClient, ObjectId} = require('mongodb');
 const url = 'mongodb+srv://user_1:Passw0rd1@cluster0.lolsc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 const path = require('path');
 const express = require("express");
@@ -27,10 +27,6 @@ app.use(expressSession({
 const urlencodedParser = express.urlencoded({
     extended: false
 });
-
-const startSession = (req,res) =>{
-    
-};
 
 const encrypt = async str => {
 
@@ -76,15 +72,19 @@ app.post("/login", urlencodedParser, async (req, res) => {
     if(decrypt(password, user.password) && username == user.username) {
         console.log('login successful');
         req.session.user = {
+
             isAuthenticated : true,
-            id : user._id
+            id: user._id
         }
-        res.redirect('/edit');
+        //console.log('id:', req.session.user._id);
+        
+        res.redirect('/edit/' + user._id);
     }
     else {
         res.redirect('/login')
     }
 });
+
 
 
 app.get("/register", (req, res) => {
@@ -113,11 +113,9 @@ app.post("/postRegister", urlencodedParser, async (req, res) => {
             if(userRegex.test(username) && emailRegex.test(email) && passwordRegex.test(password) && !isNaN(age)) {
 
                 await client.connect();
-                const id = await collection.countDocuments() + 1;
                 const encrypted = await encrypt(password);
                 console.log('password: ', encrypted);
                 let userInfo = {
-                    "_id" : id,
                     "username" : username,
                     "password" : encrypted,
                     "email" : email,
@@ -128,7 +126,8 @@ app.post("/postRegister", urlencodedParser, async (req, res) => {
                     "question4" : question4
                 }    
                 await collection.insertOne(userInfo);
-                res.redirect('/')
+                client.close();
+                res.redirect('/login')
             }
         }
     }
@@ -137,17 +136,35 @@ app.post("/postRegister", urlencodedParser, async (req, res) => {
     }
 });
 
-app.get('/edit', checkAuth, async (req, res) => {
-    const id = req.session.id;
-    console.log(id);
-    const result = await collection.findOne() 
+app.get('/edit/:id', checkAuth, async (req, res) => {
+
+    await client.connect();
+    console.log(req.session.user.id);
+
+    const result = await collection.findOne({ _id: ObjectId(req.session.user.id.trim()) });
+    client.close();
+
+    console.log('data: ', result);
+
     res.render('edit', {
 
+        question: result
     });
 });
 
-app.post('/edit/:id', async (req, res) => {
-    res.render();
+app.post('/edit/:id', urlencodedParser, async (req, res) => {
+    await client.connect();
+    await collection.updateOne({
+        _id: ObjectId(req.session.user.id)},
+        {$set: {
+            question1: req.body.mult1,
+            question2: req.body.mult2,
+            question3: req.body.mult3,
+            question4: req.body.mult4
+        }}
+    );
+
+    res.redirect('/edit/' + req.session.id);
 });
 
 app.listen(3000);
