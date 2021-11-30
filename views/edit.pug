@@ -8,11 +8,12 @@ html(lang="en")
         link(rel='stylesheet' href='style.css')
     body 
         #editForm 
-            form(id='edit-form' name='edit-form' method='post' action='')
+            form(id='edit-form' name='edit-form' method='post' action='/edit/' + question._id)
                 p 1) What animal does not appear on the Chinese Zodiac?
                     br
                     //Bull is correct
-                    select(name='mult1') 
+                    select(name='mult1' value=question.question1)
+                        option(selected=question.question1) #{question.question1}  
                         option(value='Dragon') Dragon
                         option(value='Rabbit') Rabbit 
                         option(value='Dog') Dog 
@@ -21,7 +22,8 @@ html(lang="en")
                 p 2) What US state is known as the sunflower state?
                     br
                     //Kansas is correct
-                    select(name='mult2')
+                    select(name='mult2' value=question.question2)
+                        option(selected=question.question2) #{question.question2} 
                         option(value='California') California 
                         option(value='Tennessee') Tennessee 
                         option(value='Kansas') Kansas
@@ -30,7 +32,8 @@ html(lang="en")
                 p 3) How many hearts does an octopus have?
                     br
                     //3 is correct
-                    select(name='mult3')
+                    select(name='mult3' value=question.question3)
+                        option(selected=question.question3) #{question.question3} 
                         option(value=1) 1
                         option(value=2) 2
                         option(value=3) 3 
@@ -40,7 +43,8 @@ html(lang="en")
                 p 4) What are the 3 distinct colors of the powerpuff girls?
                     br
                     //Blue, Red, Green  is correct
-                    select(name='mult4')
+                    select(name='mult4' value=question.question4)
+                        option(selected=question.question4) #{question.question4} 
                         option(value='Green, Purple, Orange') Green, Purple, Orange 
                         option(value='Red, Purple, Blue') Red, Purple, Blue 
                         option(value='Green, Purple, Orange') Blue, Red, Green 
