@@ -19,20 +19,10 @@ html(lang="en")
                         option(value='Dog') Dog 
                         option(value='Bull') Bull
                 br
-                p 2) What US state is known as the sunflower state?
-                    br
-                    //Kansas is correct
-                    select(name='mult2' value=question.question2)
-                        option(selected=question.question2) #{question.question2} 
-                        option(value='California') California 
-                        option(value='Tennessee') Tennessee 
-                        option(value='Kansas') Kansas
-                        option(value='Washington') Washington 
-                br
-                p 3) How many hearts does an octopus have?
+                p 2) How many hearts does an octopus have?
                     br
                     //3 is correct
-                    select(name='mult3' value=question.question3)
+                    select(name='mult2' value=question.question3)
                         option(selected=question.question3) #{question.question3} 
                         option(value=1) 1
                         option(value=2) 2
@@ -40,13 +30,15 @@ html(lang="en")
                         option(value=4) 4
                 
                 br
-                p 4) What are the 3 distinct colors of the powerpuff girls?
+                p 3) What are the 3 distinct colors of the powerpuff girls?
                     br
                     //Blue, Red, Green  is correct
-                    select(name='mult4' value=question.question4)
+                    select(name='mult3' value=question.question4)
                         option(selected=question.question4) #{question.question4} 
                         option(value='Green, Purple, Orange') Green, Purple, Orange 
                         option(value='Red, Purple, Blue') Red, Purple, Blue 
                         option(value='Green, Purple, Orange') Blue, Red, Green 
                         option(value='Green, Purple, Orange') Pink, Blue, Green 
                 input(type='submit' value='submit')
+    form(method='get' action='http://localhost:3000/logout')
+        input(type='submit' value='logout')

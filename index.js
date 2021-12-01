@@ -6,6 +6,7 @@ const path = require('path');
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const cookieParser = require("cookie-parser");
+const session = require("express-session");
 const app = express();
 
 const client = new MongoClient(url);
@@ -102,7 +103,6 @@ app.post("/postRegister", urlencodedParser, async (req, res) => {
     const question1 = req.body.mult1;
     const question2 = req.body.mult2;
     const question3 = req.body.mult3;
-    const question4 = req.body.mult4;
 
     const emailRegex = /^[a-zA-Z0-9._%+-]{3,}@[a-zA-Z0-9.-]{4,}.[a-zA-Z]{2,}$/;
     const userRegex = /^[0-9a-zA-Z]+$/;
@@ -165,6 +165,18 @@ app.post('/edit/:id', urlencodedParser, async (req, res) => {
     );
 
     res.redirect('/edit/' + req.session.id);
+});
+
+app.get('/logout', (req, res) => {
+
+    req.session.destroy(err => {
+        if(err) {
+            console.log(err);
+        }
+        else {
+            res.redirect('/login');
+        }
+    });
 });
 
 app.listen(3000);
