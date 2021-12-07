@@ -16,6 +16,12 @@ const collection = db.collection('information');
 app.set('view engine', 'pug');
 app.set('views', __dirname + "/views");
 
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
 app.use(express.static(path.join(__dirname,'/public')));
 app.use(cookieParser());
 app.use(expressSession({
@@ -176,6 +182,21 @@ app.get('/logout', (req, res) => {
             res.redirect('/login');
         }
     });
+});
+
+app.get("/api", async (req,res)=>{ 
+    await client.connect();
+    const returnQuestions = await collection.find({}).toArray();
+    let results = []
+    returnQuestions.forEach(element => {
+        let temp = element.question1;
+        let temp2 = element.question2;
+        let temp3 = element.question3;
+        results.push(temp, temp2, temp3);
+    })
+    console.log(results);
+    client.close()
+    res.json(results);
 });
 
 app.listen(3000);
