@@ -77,13 +77,11 @@ app.post("/login", urlencodedParser, async (req, res) => {
     const user = await collection.findOne({ "username" : username });
     
     if(decrypt(password, user.password) && username == user.username) {
-        console.log('login successful');
         req.session.user = {
 
             isAuthenticated : true,
             id: user._id
         }
-        //console.log('id:', req.session.user._id);
         
         res.redirect('/edit/' + user._id);
     }
@@ -120,14 +118,13 @@ app.post("/postRegister", urlencodedParser, async (req, res) => {
 
                 await client.connect();
                 const encrypted = await encrypt(password);
-                console.log('password: ', encrypted);
                 let userInfo = {
                     "username" : username,
                     "password" : encrypted,
                     "email" : email,
-                    "age" : age,
+                    "age" : parseInt(age),
                     "question1" : question1,
-                    "question2" : question2,
+                    "question2" : parseInt(question2),
                     "question3" : question3,
                 }    
                 await collection.insertOne(userInfo);
@@ -144,12 +141,9 @@ app.post("/postRegister", urlencodedParser, async (req, res) => {
 app.get('/edit/:id', checkAuth, async (req, res) => {
 
     await client.connect();
-    console.log(req.session.user.id);
 
     const result = await collection.findOne({ _id: ObjectId(req.session.user.id.trim()) });
     client.close();
-
-    console.log('data: ', result);
 
     res.render('edit', {
 
@@ -163,9 +157,8 @@ app.post('/edit/:id', urlencodedParser, async (req, res) => {
         _id: ObjectId(req.session.user.id)},
         {$set: {
             question1: req.body.mult1,
-            question2: req.body.mult2,
+            question2: parseInt(req.body.mult2),
             question3: req.body.mult3,
-            question4: req.body.mult4
         }}
     );
 
